@@ -53,13 +53,13 @@ jobs:
           library("purrr")
           library("rtweet")
           
-          create_token(
+          invisible(create_token(
             app = Sys.getenv("RTWEET_APP"),
             consumer_key = Sys.getenv("RTWEET_CONSUMER_KEY"),
             consumer_secret = Sys.getenv("RTWEET_CONSUMER_SECRET"),
             access_token = Sys.getenv("RTWEET_ACCESS_TOKEN"),
             access_secret = Sys.getenv("RTWEET_ACCESS_SECRET")
-          )
+          ))
           
           cannabis_jobs <- get_jobs() %>% 
             mutate(msg = glue(
@@ -68,5 +68,9 @@ jobs:
               "{url}"
             )) %>% 
             filter(updated_at >= now() - hours(1))
+          message(glue(
+            "To post {nrow(cannabis_jobs)} jobs: ",
+            "{paste(table(cannabis_jobs$company), names(table(cannabis_jobs$company)), collapse = "; ")}"
+          ))
           map(cannabis_jobs$msg, post_tweet)
         shell: Rscript {0}
