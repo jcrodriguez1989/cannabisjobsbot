@@ -70,7 +70,7 @@ jobs:
             filter(updated_at >= now() - hours(1))
           message(glue(
             "To post {nrow(cannabis_jobs)} jobs: ",
-            "{paste(table(cannabis_jobs$company), names(table(cannabis_jobs$company)), collapse = "; ")}"
+            "{paste(table(cannabis_jobs$company), names(table(cannabis_jobs$company)), collapse = '; ')}"
           ))
           invisible(map(cannabis_jobs$msg, post_tweet))
         shell: Rscript {0}
