@@ -16,7 +16,7 @@ get_jobs <- function() {
     ~company, ~id, ~tw,
     "Weedmaps", "weedmaps77", "@weedmaps",
     "Dutchie", "thedutchie", "@getdutchie",
-    "Jane", "janetechnologies", NA_character_,
+    "Jane", "janetechnologies", "",
     "LeafLink", "leaflink", "@LeafLinkUS",
     "Green Thumb", "greenthumbindustries", "@gtigrows",
     "Connected", "connectedcannabis", "@connected_cc",
