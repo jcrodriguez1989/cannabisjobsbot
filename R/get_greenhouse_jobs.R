@@ -19,7 +19,7 @@ get_greenhouse_jobs <- function(greenhouse_companies) {
 #'
 #' @param board_token The Greenhouse ID of the company to query jobs.
 #'
-#' @importFrom dplyr `%>%` mutate tibble
+#' @importFrom dplyr `%>%` mutate_at one_of tibble vars
 #' @importFrom glue glue
 #' @importFrom httr content GET
 #' @importFrom purrr map_dfr
@@ -39,5 +39,5 @@ greenhouse_api_jobs <- function(board_token) {
       )
     })
   }) %>%
-    mutate(updated_at = parse_datetime(updated_at))
+    mutate_at(vars(one_of("updated_at")), parse_datetime)
 }

@@ -19,7 +19,7 @@ get_lever_jobs <- function(lever_companies) {
 #'
 #' @param board_token The Lever ID of the company to query jobs.
 #'
-#' @importFrom dplyr `%>%` mutate tibble
+#' @importFrom dplyr `%>%` mutate_at one_of tibble vars
 #' @importFrom glue glue
 #' @importFrom httr content GET
 #' @importFrom lubridate as_datetime
@@ -28,6 +28,10 @@ get_lever_jobs <- function(lever_companies) {
 lever_api_jobs <- function(board_token) {
   lever_url <- glue("https://api.lever.co/v0/postings/{board_token}?mode=json")
   jobs_list <- content(GET(lever_url))
+  # If the result has names, then it is because we did not find jobs.
+  if (!is.null(names(jobs_list))) {
+    return()
+  }
   map_dfr(jobs_list, function(job_data) {
     tibble(
       department = job_data$categories$team,
@@ -37,5 +41,5 @@ lever_api_jobs <- function(board_token) {
       url = job_data$hostedUrl
     )
   }) %>%
-    mutate(updated_at = as_datetime(updated_at / 1000))
+    mutate_at(vars(one_of("updated_at")), function(x) as_datetime(x / 1000))
 }
