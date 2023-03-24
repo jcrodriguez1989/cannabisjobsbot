@@ -9,8 +9,12 @@
 get_lever_jobs <- function(lever_companies) {
   map_dfr(seq_len(nrow(lever_companies)), function(i) {
     company <- lever_companies[i, ]
-    lever_api_jobs(company$id) %>%
-      mutate(twitter = company$tw, company = company$company) %>%
+    jobs <- lever_api_jobs(company$id)
+    if (is.null(jobs)) {
+      warning("No jobs found for ", company$id)
+      return(data.frame())
+    }
+    mutate(jobs, twitter = company$tw, company = company$company) %>%
       select(company, everything())
   })
 }

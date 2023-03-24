@@ -28,6 +28,10 @@ get_greenhouse_jobs <- function(greenhouse_companies) {
 greenhouse_api_jobs <- function(board_token) {
   gh_url <- glue("https://boards-api.greenhouse.io/v1/boards/{board_token}/departments")
   jobs_list <- content(GET(gh_url))$departments
+  if (is.null(jobs_list)) {
+    warning("No jobs found for ", board_token)
+    return(data.frame())
+  }
   map_dfr(jobs_list, function(department) {
     map_dfr(department$jobs, function(job_data) {
       tibble(
